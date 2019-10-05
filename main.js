@@ -41,7 +41,7 @@ class Game {
 
     setTimeout(() => {
       g._runTheGame()
-    }, 1000 / window.fps || 60)
+    }, 1000 / (window.fps || 60))
   }
 
   drawElement(ele) {
@@ -176,6 +176,17 @@ class Paddle extends Element {
   }
 }
 
+class Block extends Element {
+  constructor(game) {
+    super(game)
+    this.img = game.imgs.block
+    this.x = 10
+    this.y = 10
+    this.width = 38.4 * 2
+    this.height = 12.8 * 2
+  }
+}
+
 const main = async () => {
   const imgs = await imgsFromPath({
     paddle: 'paddle',
@@ -186,6 +197,7 @@ const main = async () => {
   const game = new Game(imgs)
   const ball = new Ball(game)
   const paddle = new Paddle(game)
+  const block = new Block(game)
   game.registerAction('f', () => {
     ball.fire()
   })
@@ -202,10 +214,15 @@ const main = async () => {
       log('撞上了')
       ball.speedY *= -1
     })
+    ball.collide(block, () => {
+      log('撞上了')
+      ball.speedY *= -1
+    })
   }
   game.draw = function() {
     // draw
     game.drawElement(paddle)
+    game.drawElement(block)
     game.drawElement(ball)
   }
 }
