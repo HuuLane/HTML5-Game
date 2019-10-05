@@ -7,6 +7,8 @@ export default class Game {
     this.context = this.canvas.getContext('2d')
     //
     this.actions = {}
+    this.keyRecord = {}
+    this.mouseRecord = {}
     this.keydowns = {}
     this._listenKeyBoard()
     this._runTheGame()
@@ -17,6 +19,7 @@ export default class Game {
     const g = this
     window.addEventListener('keydown', event => {
       g.keydowns[event.key] = true
+      g.keyRecord[event.key] && g.keyRecord[event.key]()
     })
     window.addEventListener('keyup', event => {
       g.keydowns[event.key] = false
@@ -46,6 +49,19 @@ export default class Game {
   }
 
   registerAction(key, callback) {
+    // 控制游戏元素的键, 比如 f 开火, ad 移动 paddle
     this.actions[key] = callback
+  }
+
+  registerKeyboard(key, callback) {
+    // 和游戏元素无关的键, 比如 P 暂停游戏..
+    this.keyRecord[key] = callback
+  }
+
+  recordMouse(mouseActions) {
+    for (const [type, callback] of Object.entries(mouseActions)) {
+      this.mouseRecord[type] = e => callback(e.offsetX, e.y, e)
+      this.canvas.addEventListener(type, this.mouseRecord[type])
+    }
   }
 }
