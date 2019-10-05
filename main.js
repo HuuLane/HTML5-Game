@@ -53,8 +53,25 @@ class Game {
   }
 }
 
-class Ball {
+class Element {
+  get left() {
+    return this.x
+  }
+  get right() {
+    return this.x + this.width
+  }
+  get top() {
+    return this.y
+  }
+  get bottom() {
+    return this.y + this.height
+  }
+}
+
+class Ball extends Element {
   constructor(game) {
+    super(game)
+    //
     this.img = game.imgs.ball
     this.height = 30
     this.width = 30
@@ -62,8 +79,22 @@ class Ball {
     this.y = 200
     this.speedX = 5
     this.speedY = 5
+    // set circle prop
+    this.radius = this.width / 2
     //
     this._fired = false
+  }
+  get position() {
+    const r = this.radius
+    return {
+      x: this.x + r,
+      y: this.y + r,
+    }
+  }
+  distance(x, y) {
+    return Math.sqrt(
+      Math.pow(this.position.x - x, 2) + Math.pow(this.position.y - y, 2),
+    )
   }
   fire() {
     this._fired = true
@@ -84,11 +115,43 @@ class Ball {
     o.x += o.speedX
     o.y += o.speedY
   }
+  collide(o, callback) {
+    // 先找出距离球最近的点, 然后判断距离是否大于半径
+    //
+    // center coordinate of the circle
+    let { x, y } = this.position
+    // closest point
+    let cx = 0
+    let cy = 0
+    if (x < o.left) {
+      cx = o.left
+    } else if (x > o.right) {
+      cx = o.right
+    } else {
+      cx = x
+    }
+
+    if (y < o.top) {
+      cy = o.top
+    } else if (y > o.bottom) {
+      cy = o.bottom
+    } else {
+      cy = y
+    }
+
+    log('this.distance(cx, cy)', this.distance(cx, cy))
+    if (this.distance(cx, cy) < this.radius) {
+      callback()
+    }
+  }
 }
 
-class Paddle {
+class Paddle extends Element {
   constructor(game) {
+    super(game)
     this.img = game.imgs.paddle
+    // this.img.height = 12.8 * 2
+    // this.img.width = 48.5 * 2
     this.height = 12.8 * 2
     this.width = 48.5 * 2
     this.x = 100
@@ -135,6 +198,10 @@ const main = async () => {
 
   game.update = () => {
     ball.move()
+    ball.collide(paddle, () => {
+      log('撞上了')
+      ball.speedY *= -1
+    })
   }
   game.draw = function() {
     // draw
