@@ -41,19 +41,21 @@ const main = async () => {
   game.update = () => {
     ball.move()
     ball.collide(paddle, () => {
-      log('撞上了')
       ball.speedY *= -1
     })
     ball.collide(block, () => {
-      log('撞上了')
       ball.speedY *= -1
+      block.kill()
     })
   }
+
   game.draw = function() {
     // draw
     game.drawElement(paddle)
-    game.drawElement(block)
     game.drawElement(ball)
+    if (!block.isDead()) {
+      game.drawElement(block)
+    }
   }
 }
 
