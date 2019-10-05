@@ -1,6 +1,5 @@
 export default class Game {
-  constructor(imgs) {
-    this.imgs = imgs
+  constructor() {
     this.update = function() {}
     this.draw = function() {}
     //

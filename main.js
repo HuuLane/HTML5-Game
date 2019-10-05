@@ -1,9 +1,7 @@
 import { log, imgsFromPath } from './utils.js'
 
 import Game from './class/game.js'
-import Ball from './element/ball.js'
-import Block from './element/block.js'
-import Paddle from './element/paddle.js'
+import Play from './scene/play.js'
 
 const main = async () => {
   // load imgs
@@ -15,48 +13,10 @@ const main = async () => {
   log('imgs:', imgs)
   window.imgs = imgs
 
+  // run the game
   const game = new Game()
-  const ball = new Ball({
-    x: 200,
-    y: 100,
-  })
-  const paddle = new Paddle({
-    x: 100,
-    y: 350,
-  })
-  const block = new Block({
-    x: 50,
-    y: 50,
-  })
-  game.registerAction('f', () => {
-    ball.fire()
-  })
-  game.registerAction('a', () => {
-    paddle.moveLeft()
-  })
-  game.registerAction('d', () => {
-    paddle.moveRight()
-  })
-
-  game.update = () => {
-    ball.move()
-    ball.collide(paddle, () => {
-      ball.speedY *= -1
-    })
-    ball.collide(block, () => {
-      ball.speedY *= -1
-      block.kill()
-    })
-  }
-
-  game.draw = function() {
-    // draw
-    game.drawElement(paddle)
-    game.drawElement(ball)
-    if (!block.isDead()) {
-      game.drawElement(block)
-    }
-  }
+  const scene = new Play(game)
+  scene.setup()
 }
 
 main()
