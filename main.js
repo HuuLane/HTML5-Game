@@ -6,11 +6,11 @@ class Game {
     this.update = function() {}
     this.draw = function() {}
     //
-    this._canvas = document.querySelector('#id-canvas')
-    this._context = this._canvas.getContext('2d')
+    this.canvas = document.querySelector('#id-canvas')
+    this.context = this.canvas.getContext('2d')
     //
-    this._actions = {}
-    this._keydowns = {}
+    this.actions = {}
+    this.keydowns = {}
     this._listenKeyBoard()
     this._runTheGame()
   }
@@ -19,23 +19,23 @@ class Game {
     // events
     const g = this
     window.addEventListener('keydown', event => {
-      g._keydowns[event.key] = true
+      g.keydowns[event.key] = true
     })
     window.addEventListener('keyup', event => {
-      g._keydowns[event.key] = false
+      g.keydowns[event.key] = false
     })
   }
 
   _runTheGame() {
     const g = this
     // keyborad events
-    for (const key in g._actions) {
-      g._keydowns[key] && g._actions[key]()
+    for (const key in g.actions) {
+      g.keydowns[key] && g.actions[key]()
     }
     // update
     g.update()
     // clear
-    g._context.clearRect(0, 0, g._canvas.width, g._canvas.height)
+    g.context.clearRect(0, 0, g.canvas.width, g.canvas.height)
     // draw
     g.draw()
 
@@ -45,12 +45,11 @@ class Game {
   }
 
   drawElement(ele) {
-    const i = ele.img
-    this._context.drawImage(i, ele.x, ele.y, ele.height, ele.width)
+    this.context.drawImage(ele.img, ele.x, ele.y, ele.width, ele.height)
   }
 
   registerAction(key, callback) {
-    this._actions[key] = callback
+    this.actions[key] = callback
   }
 }
 
@@ -87,6 +86,33 @@ class Ball {
   }
 }
 
+class Paddle {
+  constructor(game) {
+    this.img = game.imgs.paddle
+    this.height = 12.8 * 2
+    this.width = 48.5 * 2
+    this.x = 100
+    this.y = 350
+    this.speedX = 10
+    // this.speedY = 5
+    //
+  }
+  moveLeft() {
+    const o = this
+    // 碰壁
+    if (o.x > 0) {
+      o.x -= o.speedX
+    }
+  }
+  moveRight() {
+    const o = this
+    // 碰壁
+    if (o.x < 600) {
+      o.x += o.speedX
+    }
+  }
+}
+
 const main = async () => {
   const imgs = await imgsFromPath({
     paddle: 'paddle',
@@ -96,9 +122,15 @@ const main = async () => {
   log('imgs: ', imgs)
   const game = new Game(imgs)
   const ball = new Ball(game)
-
+  const paddle = new Paddle(game)
   game.registerAction('f', () => {
     ball.fire()
+  })
+  game.registerAction('a', () => {
+    paddle.moveLeft()
+  })
+  game.registerAction('d', () => {
+    paddle.moveRight()
   })
 
   game.update = () => {
@@ -106,7 +138,7 @@ const main = async () => {
   }
   game.draw = function() {
     // draw
-    // game.drawImg(paddle)
+    game.drawElement(paddle)
     game.drawElement(ball)
   }
 }
