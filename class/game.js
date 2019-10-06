@@ -1,3 +1,5 @@
+import textConfig from '../config/font.js'
+
 export default class Game {
   constructor() {
     this.update = function() {}
@@ -44,8 +46,19 @@ export default class Game {
     }, 1000 / (window.fps || 60))
   }
 
-  drawElement(ele) {
+  renderElement(ele) {
     this.context.drawImage(ele.img, ele.x, ele.y, ele.width, ele.height)
+  }
+
+  renderText(type, text) {
+    // read conf
+    const s = textConfig[type]
+
+    const ctx = this.context
+    ctx.font = s.font
+    ctx.fillStyle = s.color
+    ctx.textAlign = 'center'
+    ctx.fillText(text, s.position[0], s.position[1])
   }
 
   registerAction(key, callback) {
