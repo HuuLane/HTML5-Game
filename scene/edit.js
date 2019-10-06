@@ -14,6 +14,7 @@ export default class Edit extends Scene {
     this.score = 0
     this.level = 0
     this.pause = false
+    this.slient = false
     // init element
     this.ball = new Ball({
       x: 200,
@@ -59,6 +60,15 @@ export default class Edit extends Scene {
     this.level++
   }
 
+  notification() {
+    return [
+      `当前编辑: 第 ${this.level} 关 有 ${this.blocks.length} 块砖`,
+      '按 n 编辑下一关',
+      '按 s 保存并返回首页',
+      '小提示: 可以用小球当橡皮擦哟, 按 c 开关通知',
+    ]
+  }
+
   // update & draw methods will cover game's
   // so the style is wild :)
   update = () => {
@@ -92,13 +102,12 @@ export default class Edit extends Scene {
     const g = this.game
     // draw
     this.elements.forEach(b => g.renderElement(b))
-    g.renderText(
-      'score',
-      `当前编辑: 第 ${this.level} 关 有 ${this.blocks.length} 块砖`,
-    )
-    g.renderText('score', `按 n 编辑下一关`, 2)
-    g.renderText('score', `按 s 保存并返回首页`, 3)
-    g.renderText('score', `小提示: 可以用小球当橡皮擦哟`, 4)
+    // text
+    if (!this.slient) {
+      this.notification().forEach((n, i) => {
+        g.renderText('score', n, i + 1)
+      })
+    }
   }
 
   _debug() {
@@ -110,6 +119,7 @@ export default class Edit extends Scene {
     // s 保存并回到 home page
     s.registerKeyboards({
       p: () => (s.pause = !s.pause),
+      c: () => (s.slient = !s.slient),
       n: () => {
         this._saveToCache()
         // 刷新地图, 尝试读取之前的资料

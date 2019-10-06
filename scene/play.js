@@ -90,6 +90,9 @@ export default class Play extends Scene {
     // draw
     this.elements.forEach(b => g.renderElement(b))
     g.renderText('score', `第 ${this.level} 关  得分 ${this.score}`)
+    if (!this.ball._fired) {
+      g.renderText('score', `按 f 开始`, 2)
+    }
   }
 
   _debug() {
