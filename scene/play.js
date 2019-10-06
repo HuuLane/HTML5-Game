@@ -1,4 +1,5 @@
 import Scene from '../class/scene.js'
+import Level from '../config/level.js'
 import Ball from '../element/ball.js'
 import Block from '../element/block.js'
 import Paddle from '../element/paddle.js'
@@ -6,7 +7,9 @@ import Paddle from '../element/paddle.js'
 export default class Play extends Scene {
   constructor(game) {
     super(game)
-    //
+    // game meta
+    this.score = 0
+    this.level = 0
     this.pause = false
     // init element
     this.ball = new Ball({
@@ -39,13 +42,22 @@ export default class Play extends Scene {
   }
 
   loadLevel() {
-    const level = [[100, 200], [100, 300]]
-    level.forEach((b, i) => {
+    // level is int
+    if (this.level === Level.length()) {
+      // game over!
+      this.game.renderScene('Home')
+      return
+    }
+    // load
+    this._blocks = []
+    Level.load(this.level).forEach((b, i) => {
       this._blocks.push(new Block({ x: b[0], y: b[1], index: i }))
     })
+    this.level++
   }
 
   // update & draw methods will cover game's
+  // so the style is wild :)
   update = () => {
     if (this.pause) {
       return
@@ -56,19 +68,28 @@ export default class Play extends Scene {
       b.speedY *= -1
     })
     for (const block of this.blocks) {
+      // 1. ball rebound
+      // 2. block hp -= 1
+      // 3. score += 1
       b.collide(block, () => {
         b.speedY *= -1
         block.kill()
         // delete the dead block
         if (block.isDead()) this._blocks[block.index] = null
+        this.score += 1
       })
+    }
+    if (this.blocks.length === 0) {
+      console.log('load next level')
+      this.loadLevel()
     }
   }
 
   draw = () => {
-    const game = this.game
+    const g = this.game
     // draw
-    this.elements.forEach(b => this.game.renderElement(b))
+    this.elements.forEach(b => g.renderElement(b))
+    g.renderText('score', `第 ${this.level} 关  得分 ${this.score}`)
   }
 
   _debug() {

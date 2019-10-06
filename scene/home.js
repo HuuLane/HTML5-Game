@@ -4,7 +4,7 @@ export default class Home extends Scene {
   constructor(game) {
     super(game)
     this.game = game
-    this.registerActions({
+    this.registerKeyboards({
       r: () => game.renderScene('Play'),
       e: () => game.renderScene('edit'),
     })

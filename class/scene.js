@@ -11,6 +11,12 @@ export default class Scene {
     }
   }
 
+  registerKeyboards(actions) {
+    for (const key in actions) {
+      this.game.registerKeyboard(key, actions[key])
+    }
+  }
+
   setup() {
     const scene = this
     scene.game.draw = scene.draw
