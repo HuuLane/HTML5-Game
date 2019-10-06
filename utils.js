@@ -31,4 +31,6 @@ const imgsFromPath = async paths => {
   return Object.fromEntries(keys.map((_, i) => [keys[i], values[i]]))
 }
 
-export { log, imgsFromPath, clearObj }
+const type = e => e.constructor.name
+
+export { log, type, imgsFromPath, clearObj }
