@@ -1,11 +1,13 @@
 import textConfig from '../config/font.js'
 import Home from '../scene/home.js'
+import Edit from '../scene/edit.js'
 import Play from '../scene/play.js'
 import { log, clearObj } from '../utils.js'
 
 const scenes = {
   Home,
   Play,
+  Edit,
 }
 
 let firstInit = true
@@ -70,7 +72,7 @@ export default class Game {
     this.context.drawImage(ele.img, ele.x, ele.y, ele.width, ele.height)
   }
 
-  renderText(type, text) {
+  renderText(type, text, line = 1) {
     // read conf
     const s = textConfig[type]
 
@@ -78,7 +80,7 @@ export default class Game {
     ctx.font = s.font
     ctx.fillStyle = s.color
     ctx.textAlign = 'center'
-    ctx.fillText(text, s.position[0], s.position[1])
+    ctx.fillText(text, s.position[0], s.position[1] * line)
   }
 
   renderScene(sceneName, ...args) {

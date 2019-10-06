@@ -16,15 +16,26 @@ const readStorage = name => {
   if (s) return JSON.parse(s)
 }
 
-const s = readStorage('gameLevel')
+let s = readStorage('gameLevel')
 
 export default class Level {
   static load(level) {
     if (s) {
+      console.log('读取到关卡', s)
       return s[level]
     } else {
       return sample[level]
     }
+  }
+
+  static save(levels) {
+    // 修改内存中的关卡信息, 然后写入 localStorage
+    s = levels
+    localStorage.setItem('gameLevel', JSON.stringify(levels))
+  }
+
+  static clear() {
+    localStorage.removeItem('gameLevel')
   }
 
   static length() {
