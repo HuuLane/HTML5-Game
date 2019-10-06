@@ -25,7 +25,7 @@ export default class Play extends Scene {
       d: () => this.paddle.moveRight(),
     })
     // read Level
-    this.readLevel()
+    this.loadLevel()
     // debug
     this._debug()
   }
@@ -34,13 +34,18 @@ export default class Play extends Scene {
     return this._blocks.filter(b => b !== null)
   }
 
-  readLevel() {
+  get elements() {
+    return [this.paddle, this.ball].concat(this.blocks)
+  }
+
+  loadLevel() {
     const level = [[100, 200], [100, 300]]
     level.forEach((b, i) => {
       this._blocks.push(new Block({ x: b[0], y: b[1], index: i }))
     })
   }
 
+  // update & draw methods will cover game's
   update = () => {
     if (this.pause) {
       return
@@ -63,9 +68,7 @@ export default class Play extends Scene {
   draw = () => {
     const game = this.game
     // draw
-    game.drawElement(this.paddle)
-    game.drawElement(this.ball)
-    this.blocks.forEach(b => this.game.drawElement(b))
+    this.elements.forEach(b => this.game.renderElement(b))
   }
 
   _debug() {
