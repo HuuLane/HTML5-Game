@@ -14,9 +14,7 @@ const main = async () => {
   window.imgs = imgs
 
   // run the game
-  const game = new Game()
-  const scene = new Play(game)
-  scene.setup()
+  Game.new()
 }
 
 main()

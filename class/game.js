@@ -1,6 +1,26 @@
 import textConfig from '../config/font.js'
+import Home from '../scene/home.js'
+import Play from '../scene/play.js'
+import { log, clearObj } from '../utils.js'
+
+const scenes = {
+  Home,
+  Play,
+}
+
+let firstInit = true
 
 export default class Game {
+  static new() {
+    if (firstInit) {
+      firstInit = false
+      const game = new Game()
+      game.renderScene('Home')
+    } else {
+      throw Error("Game can't be instanced twice")
+    }
+  }
+
   constructor() {
     this.update = function() {}
     this.draw = function() {}
@@ -61,6 +81,16 @@ export default class Game {
     ctx.fillText(text, s.position[0], s.position[1])
   }
 
+  renderScene(sceneName, ...args) {
+    // 清除之前场景绑定的键位, 鼠标事件
+    this.clearKeyboard()
+    this.clearMouse()
+    // 切换新场景
+    const Scene = scenes[sceneName]
+    const s = new Scene(this, ...args)
+    s.setup()
+  }
+
   registerAction(key, callback) {
     // 控制游戏元素的键, 比如 f 开火, ad 移动 paddle
     this.actions[key] = callback
@@ -71,10 +101,23 @@ export default class Game {
     this.keyRecord[key] = callback
   }
 
+  clearKeyboard() {
+    clearObj(this.actions)
+    clearObj(this.keyRecord)
+  }
+
   recordMouse(mouseActions) {
     for (const [type, callback] of Object.entries(mouseActions)) {
       this.mouseRecord[type] = e => callback(e.offsetX, e.y, e)
       this.canvas.addEventListener(type, this.mouseRecord[type])
     }
+  }
+
+  clearMouse() {
+    const r = this.mouseRecord
+    for (const k in r) {
+      this.canvas.removeEventListener(k, r[k])
+    }
+    clearObj(r)
   }
 }

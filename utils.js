@@ -11,6 +11,8 @@ const resolveObj = obj => {
   return [ks, vs]
 }
 
+const clearObj = obj => Object.keys(obj).forEach(prop => delete obj[prop])
+
 const imgFromPath = path => {
   // To transform a path into Promise
   const img = new Image()
@@ -29,4 +31,4 @@ const imgsFromPath = async paths => {
   return Object.fromEntries(keys.map((_, i) => [keys[i], values[i]]))
 }
 
-export { log, imgsFromPath }
+export { log, imgsFromPath, clearObj }
