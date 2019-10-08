@@ -1,13 +1,13 @@
 import textConfig from '../config/font.js'
 import Home from '../scene/home.js'
-import Edit from '../scene/edit.js'
+// import Edit from '../scene/edit.js'
 import Play from '../scene/play.js'
 import { log, clearObj } from '../utils.js'
 
 const scenes = {
   Home,
   Play,
-  Edit,
+  // Edit,
 }
 
 let firstInit = true
@@ -17,7 +17,7 @@ export default class Game {
     if (firstInit) {
       firstInit = false
       const game = new Game()
-      game.renderScene('Home')
+      game.renderScene('Play')
     } else {
       throw Error("Game can't be instanced twice")
     }
@@ -69,7 +69,18 @@ export default class Game {
   }
 
   renderElement(ele) {
-    this.context.drawImage(ele.img, ele.x, ele.y, ele.width, ele.height)
+    const i = ele.img
+    this.context.drawImage(
+      i._img,
+      i._sx,
+      i._sy,
+      i._sw,
+      i._sh,
+      ele.x,
+      ele.y,
+      ele.width,
+      ele.height,
+    )
   }
 
   renderText(type, text, line = 1) {

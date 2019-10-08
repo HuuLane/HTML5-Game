@@ -1,7 +1,51 @@
+const GameImg = function(img, sx, sy, sw, sh) {
+  // can't be modified
+  this._img = img
+  this._sx = sx
+  this._sy = sy
+  this._sw = sw
+  this._sh = sh
+}
+
 class Element {
   constructor(config) {
     this.x = config.x
     this.y = config.y
+    this.width = config.width
+    this.height = config.height
+    this._parseSourceImg(config.img, config.width, config.height)
+    // animate
+    this._imgIndex = 0
+    this._breakTime = 0
+    this.animateSpeed = 3
+  }
+
+  _parseSourceImg(img, spritesWidth, spritesHeight) {
+    // abbr
+    const w = spritesWidth
+    const h = spritesHeight
+    //
+    const nx = img.width / w
+    const ny = img.height / h
+
+    this.imgs = []
+    for (let iy = 0; iy < ny; iy++) {
+      for (let ix = 0; ix < nx; ix++) {
+        this.imgs.push(new GameImg(img, ix * w, iy * h, w, h))
+      }
+    }
+  }
+
+  animate() {
+    this._imgIndex = this._imgIndex % this.imgs.length
+    this.img = this.imgs[this._imgIndex]
+
+    if (this._breakTime === this.animateSpeed) {
+      this._imgIndex += 1
+      this._breakTime = 0
+    } else {
+      this._breakTime += 1
+    }
   }
 }
 
