@@ -7,6 +7,7 @@ import Ship from '../element/ship.js'
 import { EnemyBig, EnemySmall } from '../element/enemies.js'
 
 const log = console.log.bind(console)
+import { type } from '../utils.js'
 const random = (max, min) => Math.floor(Math.random() * (max - min + 1)) + min
 
 export default class Play extends Scene {
@@ -21,8 +22,7 @@ export default class Play extends Scene {
       x: 100,
       y: 100,
     })
-    this._bolts = []
-    this._enemies = []
+    this._elements = []
     // keyboard
     this.registerActions({
       k: () => this.fireBolt('bolt'),
@@ -58,9 +58,9 @@ export default class Play extends Scene {
 
   genEnemy() {
     const x = random(20, 230)
-    const i = this._enemies.length
+    const i = this._elements.length
     const Enemy = x % 2 === 0 ? EnemySmall : EnemyBig
-    this._enemies.push(
+    this._elements.push(
       new Enemy({
         x,
         y: 1,
@@ -77,16 +77,17 @@ export default class Play extends Scene {
       this._genBreak++
     }
   }
-  get bolts() {
-    return this._bolts.filter(b => b !== null)
-  }
 
   get enemies() {
-    return this._enemies.filter(b => b !== null)
+    return this.elements.filter(e => {
+      return type(e) === 'EnemyBig' || type(e) === 'EnemySmall'
+    })
   }
 
   get elements() {
-    return [this.ship].concat(this.bolts).concat(this.enemies)
+    const r = this._elements.filter(e => e !== null)
+    r.push(this.ship)
+    return r
   }
 
   fireBolt(type) {
@@ -94,8 +95,8 @@ export default class Play extends Scene {
       return
     }
     const B = type === 'bolt' ? Bolt : Laser
-    const i = this._bolts.length
-    this._bolts.push(
+    const i = this._elements.length
+    this._elements.push(
       new B({
         index: i,
         // x: this.ship.x + this.ship.width / 2,
@@ -106,12 +107,8 @@ export default class Play extends Scene {
     this.fireCD = true
   }
 
-  fadeBolt(bolt) {
-    this._bolts[bolt.index] = null
-  }
-
-  fadeEnemy(e) {
-    this._enemies[e.index] = null
+  fadeElement(e) {
+    this._elements[e.index] = null
   }
 
   loadLevel() {
@@ -129,6 +126,46 @@ export default class Play extends Scene {
     this.level++
   }
 
+  elementActions = {
+    Laser(e, scene) {
+      // 检测碰撞..
+      scene.enemies.forEach(ene => {
+        if (e.collide(ene)) {
+          log('碰到了')
+          scene.fadeElement(ene)
+        }
+      })
+      // go beyond the boundary
+      if (e.y < 0) {
+        scene.fadeElement(e)
+      }
+    },
+    Bolt(e, scene) {
+      // 检测碰撞..
+      scene.enemies.forEach(ene => {
+        if (e.collide(ene)) {
+          log('碰到了')
+          scene.fadeElement(ene)
+        }
+      })
+      // go beyond the boundary
+      if (e.y < 0) {
+        scene.fadeElement(e)
+      }
+    },
+    Ship(e, scene) {},
+    EnemyBig(e, scene) {
+      if (e.y > 200) {
+        scene.fadeElement(e)
+      }
+    },
+    EnemySmall(e, scene) {
+      if (e.y > 200) {
+        scene.fadeElement(e)
+      }
+    },
+  }
+
   // update & draw methods will cover game's
   // so the style is wild :)
   update = () => {
@@ -137,52 +174,13 @@ export default class Play extends Scene {
     }
 
     this.genEnemies()
+    this.refreshBoltCD()
+
     this.elements.forEach(e => {
       e.animate()
       e.move()
+      this.elementActions[type(e)](e, this)
     })
-
-    this.enemies.forEach(e => {
-      if (e.y > 200) {
-        this.fadeEnemy(e)
-      }
-    })
-    this.refreshBoltCD()
-
-    this.bolts.forEach(b => {
-      // 检测碰撞..
-      this.enemies.forEach(e => {
-        if (b.collide(e)) {
-          log('碰到了')
-          this.fadeEnemy(e)
-        }
-      })
-      // go beyond the boundary
-      if (b.y < 0) {
-        this.fadeBolt(b)
-      }
-    })
-    // const b = this.ball
-    // b.move()
-    // b.collide(this.paddle, () => {
-    //   b.speedY *= -1
-    // })
-    // for (const block of this.blocks) {
-    //   // 1. ball rebound
-    //   // 2. block hp -= 1
-    //   // 3. score += 1
-    //   b.collide(block, () => {
-    //     b.speedY *= -1
-    //     block.kill()
-    //     // delete the dead block
-    //     if (block.isDead()) this._blocks[block.index] = null
-    //     this.score += 1
-    //   })
-    // }
-    // if (this.blocks.length === 0) {
-    //   console.log('load next level')
-    //   this.loadLevel()
-    // }
   }
 
   draw = () => {
