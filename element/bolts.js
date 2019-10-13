@@ -16,6 +16,20 @@ class Bolts extends Rectangle {
     this.index = config.index
   }
 
+  collide(o) {
+    const b = this
+    if (
+      b.left > o.right ||
+      b.right < o.left ||
+      b.top > o.bottom ||
+      b.bottom < o.top
+    ) {
+      return false
+    } else {
+      return true
+    }
+  }
+
   move() {
     const o = this
     o.y -= o.speedY
