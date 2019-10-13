@@ -7,8 +7,8 @@ export default class Ship extends Rectangle {
     config.height = 24
     config.width = 16
     super(config)
-    this.speedX = 10
-    this.speedY = 5
+    this.speedX = 3
+    this.speedY = 2
     // this.animateSpeed = 3
   }
   moveTop() {
