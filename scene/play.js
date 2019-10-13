@@ -4,7 +4,7 @@ import Scene from '../class/scene.js'
 // Game elements
 import { Laser, Bolt } from '../element/bolts.js'
 import Ship from '../element/ship.js'
-import EnemySmall from '../element/enemy-small.js'
+import { EnemyBig, EnemySmall } from '../element/enemies.js'
 
 const log = console.log.bind(console)
 const random = (max, min) => Math.floor(Math.random() * (max - min + 1)) + min
@@ -59,8 +59,9 @@ export default class Play extends Scene {
   genEnemy() {
     const x = random(20, 230)
     const i = this._enemies.length
+    const Enemy = x % 2 === 0 ? EnemySmall : EnemyBig
     this._enemies.push(
-      new EnemySmall({
+      new Enemy({
         x,
         y: 1,
         index: i,
