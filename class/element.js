@@ -47,6 +47,8 @@ class Element {
       this._breakTime += 1
     }
   }
+
+  move() {}
 }
 
 class Circle extends Element {

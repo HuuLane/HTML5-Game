@@ -1,10 +1,13 @@
 import Scene from '../class/scene.js'
 // import Level from '../config/level.js'
 // import Ball from '../element/ball.js'
+// Game elements
 import { Laser, Bolt } from '../element/bolts.js'
 import Ship from '../element/ship.js'
+import EnemySmall from '../element/enemy-small.js'
 
 const log = console.log.bind(console)
+const random = (max, min) => Math.floor(Math.random() * (max - min + 1)) + min
 
 export default class Play extends Scene {
   constructor(game) {
@@ -19,6 +22,7 @@ export default class Play extends Scene {
       y: 100,
     })
     this._bolts = []
+    this._enemies = []
     // keyboard
     this.registerActions({
       k: () => this.fireBolt('bolt'),
@@ -37,6 +41,7 @@ export default class Play extends Scene {
     this.fireCD = false
     this._CDTime = 15
     this._fireBreak = 0
+    this._genBreak = 0
   }
 
   refreshBoltCD() {
@@ -51,12 +56,36 @@ export default class Play extends Scene {
     }
   }
 
+  genEnemy() {
+    const x = random(20, 230)
+    const i = this._enemies.length
+    this._enemies.push(
+      new EnemySmall({
+        x,
+        y: 1,
+        index: i,
+      }),
+    )
+  }
+
+  genEnemies() {
+    if (this._genBreak === this._CDTime * 4) {
+      this.genEnemy()
+      this._genBreak = 0
+    } else {
+      this._genBreak++
+    }
+  }
   get bolts() {
     return this._bolts.filter(b => b !== null)
   }
 
+  get enemies() {
+    return this._enemies.filter(b => b !== null)
+  }
+
   get elements() {
-    return [this.ship].concat(this.bolts)
+    return [this.ship].concat(this.bolts).concat(this.enemies)
   }
 
   fireBolt(type) {
@@ -80,6 +109,10 @@ export default class Play extends Scene {
     this._bolts[bolt.index] = null
   }
 
+  fadeEnemy(e) {
+    this._enemies[e.index] = null
+  }
+
   loadLevel() {
     // level is int
     if (this.level === Level.length()) {
@@ -101,15 +134,30 @@ export default class Play extends Scene {
     if (this.pause) {
       return
     }
-    this.ship.animate()
+
+    this.genEnemies()
+    this.elements.forEach(e => {
+      e.animate()
+      e.move()
+    })
+
+    this.enemies.forEach(e => {
+      if (e.y > 200) {
+        this.fadeEnemy(e)
+      }
+    })
     this.refreshBoltCD()
+
     this.bolts.forEach(b => {
-      b.animate()
-      b.move()
       // 检测碰撞..
-      //
+      this.enemies.forEach(e => {
+        if (b.collide(e)) {
+          log('碰到了')
+          this.fadeEnemy(e)
+        }
+      })
+      // go beyond the boundary
       if (b.y < 0) {
-        // go beyond the boundary
         this.fadeBolt(b)
       }
     })
