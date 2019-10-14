@@ -17,7 +17,8 @@ class Element {
     // animate
     this._imgIndex = 0
     this._breakTime = 0
-    this.animateSpeed = 3
+    this.animateSpeed = 10
+    this.animateCallback = function() {}
   }
 
   _parseSourceImg(img, spritesWidth, spritesHeight) {
@@ -34,10 +35,17 @@ class Element {
         this.imgs.push(new GameImg(img, ix * w, iy * h, w, h))
       }
     }
+    // default
+    this.img = this.imgs[0]
   }
 
   animate() {
-    this._imgIndex = this._imgIndex % this.imgs.length
+    if (this._imgIndex === this.imgs.length - 1) {
+      // 一轮动画播放完毕
+      this._imgIndex = 0
+      this.animateCallback()
+    }
+
     this.img = this.imgs[this._imgIndex]
 
     if (this._breakTime === this.animateSpeed) {
