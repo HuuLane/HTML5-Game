@@ -204,9 +204,7 @@ export default class Play extends Scene {
     Explosion(e, scene) {},
   }
 
-  // update & draw methods will cover game's
-  // so the style is wild :)
-  update = () => {
+  update() {
     if (this.pause) {
       return
     }
@@ -222,7 +220,7 @@ export default class Play extends Scene {
     })
   }
 
-  draw = () => {
+  draw() {
     const g = this.game
     // draw
     this.elements.forEach(e => g.renderElement(e))

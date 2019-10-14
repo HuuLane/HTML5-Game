@@ -16,16 +16,13 @@ export default class Game {
   static new() {
     if (firstInit) {
       firstInit = false
-      const game = new Game()
-      game.renderScene('Play')
+      const game = new Game('Play')
     } else {
       throw Error("Game can't be instanced twice")
     }
   }
 
-  constructor() {
-    this.update = function() {}
-    this.draw = function() {}
+  constructor(initScene) {
     //
     this.canvas = document.querySelector('#id-canvas')
     this.context = this.canvas.getContext('2d')
@@ -35,6 +32,7 @@ export default class Game {
     this.mouseRecord = {}
     this.keydowns = {}
     this._listenKeyBoard()
+    this.renderScene(initScene)
     this._runTheGame()
   }
 
@@ -101,7 +99,7 @@ export default class Game {
     // 切换新场景
     const Scene = scenes[sceneName]
     const s = new Scene(this, ...args)
-    s.setup()
+    this.scene = s
   }
 
   registerAction(key, callback) {
@@ -132,5 +130,13 @@ export default class Game {
       this.canvas.removeEventListener(k, r[k])
     }
     clearObj(r)
+  }
+
+  update() {
+    this.scene.update()
+  }
+
+  draw() {
+    this.scene.draw()
   }
 }
