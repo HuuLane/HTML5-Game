@@ -113,9 +113,15 @@ export default class Play extends Scene {
   }
 
   explode(element) {
+    let x = element.x
+    let y = element.y
+    if (type(element) === 'EnemyBig') {
+      x += element.width / 3
+      y += element.height / 3
+    }
     const e = new Explosion({
-      x: element.x + element.width / 3,
-      y: element.y + element.height / 3,
+      x,
+      y,
     })
     e.animateCallback = () => {
       log('消失')
