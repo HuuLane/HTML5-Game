@@ -40,7 +40,7 @@ class Element {
   }
 
   animate() {
-    if (this._imgIndex === this.imgs.length - 1) {
+    if (this._imgIndex === this.imgs.length) {
       // 一轮动画播放完毕
       this._imgIndex = 0
       this.animateCallback()
