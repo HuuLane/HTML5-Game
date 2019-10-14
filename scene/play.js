@@ -37,7 +37,7 @@ export default class Play extends Scene {
     // read Level
     // this.loadLevel()
     // debug
-    // this._debug()
+    this._debug()
     //
     // bolt CD
     this.fireCD = false
@@ -244,7 +244,7 @@ export default class Play extends Scene {
     const mouseActions = {
       mousedown: (x, y) => {
         // 检查是否点中了 element
-        for (const e of this.blocks.concat([s.paddle, s.ball])) {
+        for (const e of this.elements) {
           // 设置拖拽状态
           if (e.hasPoint(x, y)) {
             selected = e
