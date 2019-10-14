@@ -9,7 +9,6 @@ class EnemyBig extends Rectangle {
     this.speedX = 0
     this.speedY = 1
     // play scene meta
-    this.index = config.index
     // this.animateSpeed = 3
   }
   move() {

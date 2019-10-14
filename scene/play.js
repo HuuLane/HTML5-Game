@@ -23,6 +23,7 @@ export default class Play extends Scene {
       y: 100,
     })
     this._elements = []
+    this._removedElementIndexes = []
     // keyboard
     this.registerActions({
       k: () => this.fireBolt('bolt'),
@@ -58,13 +59,11 @@ export default class Play extends Scene {
 
   genEnemy() {
     const x = random(20, 230)
-    const i = this._elements.length
     const Enemy = x % 2 === 0 ? EnemySmall : EnemyBig
-    this._elements.push(
+    this.addElement(
       new Enemy({
         x,
         y: 1,
-        index: i,
       }),
     )
   }
@@ -95,10 +94,8 @@ export default class Play extends Scene {
       return
     }
     const B = type === 'bolt' ? Bolt : Laser
-    const i = this._elements.length
-    this._elements.push(
+    this.addElement(
       new B({
-        index: i,
         // x: this.ship.x + this.ship.width / 2,
         x: this.ship.x,
         y: this.ship.y,
@@ -107,8 +104,20 @@ export default class Play extends Scene {
     this.fireCD = true
   }
 
-  fadeElement(e) {
-    this._elements[e.index] = null
+  addElement(element) {
+    let i = this._removedElementIndexes.shift()
+    if (!i) {
+      i = this._elements.length
+    }
+    element.index = i
+    this._elements[i] = element
+  }
+
+  removeElement(e) {
+    const i = e.index
+    this._elements[i] = null
+    this._removedElementIndexes.push(i)
+    log('', this._elements)
   }
 
   loadLevel() {
@@ -132,12 +141,12 @@ export default class Play extends Scene {
       scene.enemies.forEach(ene => {
         if (e.collide(ene)) {
           log('碰到了')
-          scene.fadeElement(ene)
+          scene.removeElement(ene)
         }
       })
       // go beyond the boundary
       if (e.y < 0) {
-        scene.fadeElement(e)
+        scene.removeElement(e)
       }
     },
     Bolt(e, scene) {
@@ -145,23 +154,23 @@ export default class Play extends Scene {
       scene.enemies.forEach(ene => {
         if (e.collide(ene)) {
           log('碰到了')
-          scene.fadeElement(ene)
+          scene.removeElement(ene)
         }
       })
       // go beyond the boundary
       if (e.y < 0) {
-        scene.fadeElement(e)
+        scene.removeElement(e)
       }
     },
     Ship(e, scene) {},
     EnemyBig(e, scene) {
       if (e.y > 200) {
-        scene.fadeElement(e)
+        scene.removeElement(e)
       }
     },
     EnemySmall(e, scene) {
       if (e.y > 200) {
-        scene.fadeElement(e)
+        scene.removeElement(e)
       }
     },
   }

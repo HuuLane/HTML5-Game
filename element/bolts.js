@@ -13,7 +13,6 @@ class Bolts extends Rectangle {
     this.speedY = 2
     this.animateSpeed = 10
     // play scene meta
-    this.index = config.index
   }
 
   collide(o) {
