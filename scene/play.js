@@ -5,6 +5,7 @@ import Scene from '../class/scene.js'
 import { Laser, Bolt } from '../element/bolts.js'
 import Ship from '../element/ship.js'
 import { EnemyBig, EnemySmall } from '../element/enemies.js'
+import Explosion from '../element/explosion.js'
 
 const log = console.log.bind(console)
 import { type } from '../utils.js'
@@ -104,6 +105,18 @@ export default class Play extends Scene {
     this.fireCD = true
   }
 
+  explode(element) {
+    const e = new Explosion({
+      x: element.x + element.width / 3,
+      y: element.y + element.height / 3,
+    })
+    e.animateCallback = () => {
+      log('消失')
+      this.removeElement(e)
+    }
+    this.addElement(e)
+  }
+
   addElement(element) {
     let i = this._removedElementIndexes.shift()
     if (!i) {
@@ -140,8 +153,10 @@ export default class Play extends Scene {
       // 检测碰撞..
       scene.enemies.forEach(ene => {
         if (e.collide(ene)) {
-          log('I am the Laser!')
+          log('I am the Laser!', ene.x, ene.y)
           scene.removeElement(ene)
+          // Explosion
+          scene.explode(ene)
         }
       })
       // go beyond the boundary
@@ -174,6 +189,7 @@ export default class Play extends Scene {
         scene.removeElement(e)
       }
     },
+    Explosion(e, scene) {},
   }
 
   // update & draw methods will cover game's
