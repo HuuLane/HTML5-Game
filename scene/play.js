@@ -140,7 +140,7 @@ export default class Play extends Scene {
       // 检测碰撞..
       scene.enemies.forEach(ene => {
         if (e.collide(ene)) {
-          log('碰到了')
+          log('I am the Laser!')
           scene.removeElement(ene)
         }
       })
@@ -153,7 +153,8 @@ export default class Play extends Scene {
       // 检测碰撞..
       scene.enemies.forEach(ene => {
         if (e.collide(ene)) {
-          log('碰到了')
+          log('I am a bolt!')
+          scene.removeElement(e)
           scene.removeElement(ene)
         }
       })
@@ -188,6 +189,7 @@ export default class Play extends Scene {
     this.elements.forEach(e => {
       e.animate()
       e.move()
+      // element callback
       this.elementActions[type(e)](e, this)
     })
   }
@@ -195,7 +197,6 @@ export default class Play extends Scene {
   draw = () => {
     const g = this.game
     // draw
-    // g.renderElement(this.ship)
     this.elements.forEach(e => g.renderElement(e))
     // g.renderText('score', `第 ${this.level} 关  得分 ${this.score}`)
     // if (!this.ball._fired) {
