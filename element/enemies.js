@@ -7,9 +7,8 @@ class EnemyBig extends Rectangle {
     config.width = 32
     super(config)
     this.speedX = 0
-    this.speedY = 1
+    this.speedY = 0.3
     // play scene meta
-    // this.animateSpeed = 3
   }
   move() {
     const o = this
@@ -27,7 +26,6 @@ class EnemySmall extends Rectangle {
     this.speedX = 0
     this.speedY = 1
     // play scene meta
-    this.index = config.index
     // this.animateSpeed = 3
   }
   move() {
