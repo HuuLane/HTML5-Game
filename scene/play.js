@@ -78,6 +78,13 @@ export default class Play extends Scene {
     }
   }
 
+  damageEnemy(ene) {
+    if (--ene.hp === 0) {
+      this.removeElement(ene)
+      this.explode(ene)
+    }
+  }
+
   get enemies() {
     return this.elements.filter(e => {
       return type(e) === 'EnemyBig' || type(e) === 'EnemySmall'
@@ -153,10 +160,9 @@ export default class Play extends Scene {
       // 检测碰撞..
       scene.enemies.forEach(ene => {
         if (e.collide(ene)) {
-          log('I am the Laser!', ene.x, ene.y)
-          scene.removeElement(ene)
-          // Explosion
-          scene.explode(ene)
+          log('I am the Laser!')
+          // scene.removeElement(ene)
+          scene.damageEnemy(ene)
         }
       })
       // go beyond the boundary
@@ -170,7 +176,7 @@ export default class Play extends Scene {
         if (e.collide(ene)) {
           log('I am a bolt!')
           scene.removeElement(e)
-          scene.removeElement(ene)
+          scene.damageEnemy(ene)
         }
       })
       // go beyond the boundary
