@@ -1,6 +1,4 @@
 import BackGround from './background.js'
-// import Level from '../config/level.js'
-// import Ball from '../element/ball.js'
 // Game elements
 import { Laser, Bolt } from '../element/bolts.js'
 import Ship from '../element/ship.js'
@@ -34,8 +32,6 @@ export default class Play extends BackGround {
       w: () => this.ship.moveTop(),
       s: () => this.ship.moveBottom(),
     })
-    // read Level
-    // this.loadLevel()
     // debug
     this._debug()
     //
@@ -59,12 +55,13 @@ export default class Play extends BackGround {
   }
 
   genEnemy() {
+    // random enemy
     const x = random(20, 230)
     const Enemy = x % 2 === 0 ? EnemySmall : EnemyBig
     this.addElement(
       new Enemy({
         x,
-        y: 1,
+        y: -30,
       }),
     )
   }
@@ -79,7 +76,8 @@ export default class Play extends BackGround {
   }
 
   damageEnemy(ene) {
-    if (--ene.hp === 0) {
+    ene.hp -= 1
+    if (ene.hp === 0) {
       this.removeElement(ene)
       this.explode(ene)
     }
@@ -100,16 +98,17 @@ export default class Play extends BackGround {
   fireBolt(type) {
     if (this.fireCD) {
       return
+    } else {
+      this.fireCD = true
+      // fire a bolt near the ship
+      const B = type === 'bolt' ? Bolt : Laser
+      this.addElement(
+        new B({
+          x: this.ship.x,
+          y: this.ship.y,
+        }),
+      )
     }
-    const B = type === 'bolt' ? Bolt : Laser
-    this.addElement(
-      new B({
-        // x: this.ship.x + this.ship.width / 2,
-        x: this.ship.x,
-        y: this.ship.y,
-      }),
-    )
-    this.fireCD = true
   }
 
   explode(element) {
@@ -146,21 +145,6 @@ export default class Play extends BackGround {
     log('', this._elements)
   }
 
-  loadLevel() {
-    // level is int
-    if (this.level === Level.length()) {
-      // game over!
-      this.game.renderScene('Home')
-      return
-    }
-    // load
-    this._blocks = []
-    Level.load(this.level).forEach((b, i) => {
-      this._blocks.push(new Block({ x: b[0], y: b[1], index: i }))
-    })
-    this.level++
-  }
-
   elementActions = {
     Laser(e, scene) {
       // 检测碰撞..
@@ -192,12 +176,14 @@ export default class Play extends BackGround {
     },
     Ship(e, scene) {},
     EnemyBig(e, scene) {
-      if (e.y > 200) {
+      if (e.y > 342 + 20) {
+        // scene.gameOver()
         scene.removeElement(e)
       }
     },
     EnemySmall(e, scene) {
-      if (e.y > 200) {
+      if (e.y > 342 + 20) {
+        // scene.gameOver()
         scene.removeElement(e)
       }
     },
@@ -226,10 +212,7 @@ export default class Play extends BackGround {
     const g = this.game
     // draw
     this.elements.forEach(e => g.renderElement(e))
-    // g.renderText('score', `第 ${this.level} 关  得分 ${this.score}`)
-    // if (!this.ball._fired) {
-    //   g.renderText('score', `按 f 开始`, 2)
-    // }
+    // g.renderText('score', `得分 ${this.score}`)
   }
 
   _debug() {
