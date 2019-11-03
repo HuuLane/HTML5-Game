@@ -1,4 +1,4 @@
-import Scene from '../class/scene.js'
+import BackGround from './background.js'
 // import Level from '../config/level.js'
 // import Ball from '../element/ball.js'
 // Game elements
@@ -11,7 +11,7 @@ const log = console.log.bind(console)
 import { type } from '../utils.js'
 const random = (max, min) => Math.floor(Math.random() * (max - min + 1)) + min
 
-export default class Play extends Scene {
+export default class Play extends BackGround {
   constructor(game) {
     super(game)
     // game meta
@@ -205,6 +205,7 @@ export default class Play extends Scene {
   }
 
   update() {
+    super.update()
     if (this.pause) {
       return
     }
@@ -221,6 +222,7 @@ export default class Play extends Scene {
   }
 
   draw() {
+    super.draw()
     const g = this.game
     // draw
     this.elements.forEach(e => g.renderElement(e))

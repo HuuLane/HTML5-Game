@@ -7,18 +7,13 @@ const GameImg = function(img, sx, sy, sw, sh) {
   this._sh = sh
 }
 
-class Element {
+class Img {
   constructor(config) {
     this.x = config.x
     this.y = config.y
     this.width = config.width
     this.height = config.height
     this._parseSourceImg(config.img, config.width, config.height)
-    // animate
-    this._imgIndex = 0
-    this._breakTime = 0
-    this.animateSpeed = 10
-    this.animateCallback = function() {}
   }
 
   _parseSourceImg(img, spritesWidth, spritesHeight) {
@@ -37,6 +32,17 @@ class Element {
     }
     // default
     this.img = this.imgs[0]
+  }
+}
+
+class Element extends Img {
+  constructor(config) {
+    super(config)
+    // animate
+    this._imgIndex = 0
+    this._breakTime = 0
+    this.animateSpeed = 10
+    this.animateCallback = function() {}
   }
 
   animate() {
@@ -114,4 +120,4 @@ class Rectangle extends Element {
   }
 }
 
-export { Circle, Rectangle }
+export { Img, Circle, Rectangle }
