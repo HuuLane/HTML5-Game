@@ -1,13 +1,11 @@
 import textConfig from '../config/font.js'
 import Home from '../scene/home.js'
-// import Edit from '../scene/edit.js'
 import Play from '../scene/play.js'
 import { log, clearObj } from '../utils.js'
 
 const scenes = {
   Home,
   Play,
-  // Edit,
 }
 
 let firstInit = true
@@ -16,7 +14,7 @@ export default class Game {
   static new() {
     if (firstInit) {
       firstInit = false
-      const game = new Game('Play')
+      const game = new Game('Home')
     } else {
       throw Error("Game can't be instanced twice")
     }
