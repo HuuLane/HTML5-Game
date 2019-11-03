@@ -1,8 +1,68 @@
-class Element {
+const GameImg = function(img, sx, sy, sw, sh) {
+  // can't be modified
+  this._img = img
+  this._sx = sx
+  this._sy = sy
+  this._sw = sw
+  this._sh = sh
+}
+
+class Img {
   constructor(config) {
     this.x = config.x
     this.y = config.y
+    this.width = config.width
+    this.height = config.height
+    this._parseSourceImg(config.img, config.width, config.height)
   }
+
+  _parseSourceImg(img, spritesWidth, spritesHeight) {
+    // abbr
+    const w = spritesWidth
+    const h = spritesHeight
+    //
+    const nx = img.width / w
+    const ny = img.height / h
+
+    this.imgs = []
+    for (let iy = 0; iy < ny; iy++) {
+      for (let ix = 0; ix < nx; ix++) {
+        this.imgs.push(new GameImg(img, ix * w, iy * h, w, h))
+      }
+    }
+    // default
+    this.img = this.imgs[0]
+  }
+}
+
+class Element extends Img {
+  constructor(config) {
+    super(config)
+    // animate
+    this._imgIndex = 0
+    this._breakTime = 0
+    this.animateSpeed = 10
+    this.animateCallback = function() {}
+  }
+
+  animate() {
+    if (this._imgIndex === this.imgs.length) {
+      // 一轮动画播放完毕
+      this._imgIndex = 0
+      this.animateCallback()
+    }
+
+    this.img = this.imgs[this._imgIndex]
+
+    if (this._breakTime === this.animateSpeed) {
+      this._imgIndex += 1
+      this._breakTime = 0
+    } else {
+      this._breakTime += 1
+    }
+  }
+
+  move() {}
 }
 
 class Circle extends Element {
@@ -60,4 +120,4 @@ class Rectangle extends Element {
   }
 }
 
-export { Circle, Rectangle }
+export { Img, Circle, Rectangle }

@@ -1,12 +1,12 @@
 export default {
   title: {
-    font: '60px serif',
+    font: '30px serif',
     color: 'pink',
-    position: [600 / 2, 400 / 2],
+    position: [256 / 2, 342 / 2],
   },
   score: {
-    font: '24px serif',
+    font: '12px serif',
     color: 'red',
-    position: [600 / 2, 30],
+    position: [256 / 2, 30],
   },
 }

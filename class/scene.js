@@ -1,8 +1,6 @@
 export default class Scene {
   constructor(game) {
     this.game = game
-    this.draw = function() {}
-    this.update = function() {}
   }
 
   registerActions(actions) {
@@ -15,11 +13,5 @@ export default class Scene {
     for (const key in actions) {
       this.game.registerKeyboard(key, actions[key])
     }
-  }
-
-  setup() {
-    const scene = this
-    scene.game.draw = scene.draw
-    scene.game.update = scene.update
   }
 }

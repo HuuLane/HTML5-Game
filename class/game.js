@@ -1,13 +1,11 @@
 import textConfig from '../config/font.js'
 import Home from '../scene/home.js'
-import Edit from '../scene/edit.js'
 import Play from '../scene/play.js'
 import { log, clearObj } from '../utils.js'
 
 const scenes = {
   Home,
   Play,
-  Edit,
 }
 
 let firstInit = true
@@ -16,16 +14,13 @@ export default class Game {
   static new() {
     if (firstInit) {
       firstInit = false
-      const game = new Game()
-      game.renderScene('Home')
+      const game = new Game('Home')
     } else {
       throw Error("Game can't be instanced twice")
     }
   }
 
-  constructor() {
-    this.update = function() {}
-    this.draw = function() {}
+  constructor(initScene) {
     //
     this.canvas = document.querySelector('#id-canvas')
     this.context = this.canvas.getContext('2d')
@@ -35,6 +30,7 @@ export default class Game {
     this.mouseRecord = {}
     this.keydowns = {}
     this._listenKeyBoard()
+    this.renderScene(initScene)
     this._runTheGame()
   }
 
@@ -69,7 +65,18 @@ export default class Game {
   }
 
   renderElement(ele) {
-    this.context.drawImage(ele.img, ele.x, ele.y, ele.width, ele.height)
+    const i = ele.img
+    this.context.drawImage(
+      i._img,
+      i._sx,
+      i._sy,
+      i._sw,
+      i._sh,
+      ele.x,
+      ele.y,
+      ele.width,
+      ele.height,
+    )
   }
 
   renderText(type, text, line = 1) {
@@ -90,7 +97,7 @@ export default class Game {
     // 切换新场景
     const Scene = scenes[sceneName]
     const s = new Scene(this, ...args)
-    s.setup()
+    this.scene = s
   }
 
   registerAction(key, callback) {
@@ -121,5 +128,13 @@ export default class Game {
       this.canvas.removeEventListener(k, r[k])
     }
     clearObj(r)
+  }
+
+  update() {
+    this.scene.update()
+  }
+
+  draw() {
+    this.scene.draw()
   }
 }
