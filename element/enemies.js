@@ -7,7 +7,7 @@ class EnemyBig extends Rectangle {
     config.width = 32
     super(config)
     this.speedX = 0
-    this.speedY = 0.3
+    this.speedY = 1.2
     // play scene meta
     this.hp = 3
   }
@@ -25,7 +25,7 @@ class EnemySmall extends Rectangle {
     config.width = 16
     super(config)
     this.speedX = 0
-    this.speedY = 1
+    this.speedY = 1.5
     // play scene meta
     // this.animateSpeed = 3
     this.hp = 1

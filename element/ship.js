@@ -10,6 +10,7 @@ export default class Ship extends Rectangle {
     this.speedX = 3
     this.speedY = 2
     // this.animateSpeed = 3
+    this.autoDownSpeed = 1.2
   }
   moveTop() {
     const o = this
@@ -37,6 +38,11 @@ export default class Ship extends Rectangle {
     // 碰壁
     if (o.x + o.width < 256) {
       o.x += o.speedX
+    }
+  }
+  move() {
+    if (this.y + this.height < 342) {
+      this.y += this.autoDownSpeed
     }
   }
 }
