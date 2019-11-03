@@ -1,6 +1,6 @@
 export default {
   title: {
-    font: '60px serif',
+    font: '30px serif',
     color: 'pink',
     position: [256 / 2, 342 / 2],
   },

@@ -35,6 +35,7 @@ export default class Play extends BackGround {
     // debug
     this._debug()
     //
+    this.score = 0
     // bolt CD
     this.fireCD = false
     this._CDTime = 15
@@ -67,7 +68,7 @@ export default class Play extends BackGround {
   }
 
   genEnemies() {
-    if (this._genBreak === this._CDTime * 4) {
+    if (this._genBreak === this._CDTime * 6) {
       this.genEnemy()
       this._genBreak = 0
     } else {
@@ -143,6 +144,8 @@ export default class Play extends BackGround {
     this._elements[i] = null
     this._removedElementIndexes.push(i)
     log('', this._elements)
+    //
+    this.score += 1
   }
 
   elementActions = {
@@ -177,17 +180,21 @@ export default class Play extends BackGround {
     Ship(e, scene) {},
     EnemyBig(e, scene) {
       if (e.y > 342 + 20) {
-        // scene.gameOver()
-        scene.removeElement(e)
+        scene.gameOver()
+        // scene.removeElement(e)
       }
     },
     EnemySmall(e, scene) {
       if (e.y > 342 + 20) {
-        // scene.gameOver()
-        scene.removeElement(e)
+        scene.gameOver()
+        // scene.removeElement(e)
       }
     },
     Explosion(e, scene) {},
+  }
+
+  gameOver() {
+    this.game.renderScene('Home', this.score)
   }
 
   update() {
@@ -212,7 +219,7 @@ export default class Play extends BackGround {
     const g = this.game
     // draw
     this.elements.forEach(e => g.renderElement(e))
-    // g.renderText('score', `得分 ${this.score}`)
+    g.renderText('score', `得分 ${this.score}`)
   }
 
   _debug() {
