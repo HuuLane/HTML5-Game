@@ -1,6 +1,7 @@
 import textConfig from '../config/font.js'
 import Home from '../scene/home.js'
 import Play from '../scene/play.js'
+import BackGround from '../scene/background.js'
 import { log, clearObj } from '../utils.js'
 
 const scenes = {
@@ -30,7 +31,7 @@ export default class Game {
     this.mouseRecord = {}
     this.keydowns = {}
     this._listenKeyBoard()
-    this.renderScene(initScene)
+    this._initGame(initScene)
     this._runTheGame()
   }
 
@@ -44,6 +45,12 @@ export default class Game {
     window.addEventListener('keyup', event => {
       g.keydowns[event.key] = false
     })
+  }
+
+  _initGame(initScene) {
+    // init BackGround
+    this._background = new BackGround(this)
+    this.renderScene(initScene)
   }
 
   _runTheGame() {
@@ -131,10 +138,12 @@ export default class Game {
   }
 
   update() {
+    this._background.update()
     this.scene.update()
   }
 
   draw() {
+    this._background.draw()
     this.scene.draw()
   }
 }
