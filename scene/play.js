@@ -179,13 +179,13 @@ export default class Play extends BackGround {
     },
     Ship(e, scene) {},
     EnemyBig(e, scene) {
-      if (e.y > 342 + 20) {
+      if (e.y > 342) {
         scene.gameOver()
         // scene.removeElement(e)
       }
     },
     EnemySmall(e, scene) {
-      if (e.y > 342 + 20) {
+      if (e.y > 342) {
         scene.gameOver()
         // scene.removeElement(e)
       }

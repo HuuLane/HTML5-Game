@@ -61,7 +61,7 @@ export default class Game {
 
     setTimeout(() => {
       g._runTheGame()
-    }, 1000 / (window.fps || 60))
+    }, 1000 / (window.fps || 30))
   }
 
   renderElement(ele) {
