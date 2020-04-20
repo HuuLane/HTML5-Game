@@ -1,15 +1,15 @@
 export default class Scene {
-  constructor(game) {
+  constructor (game) {
     this.game = game
   }
 
-  registerActions(actions) {
+  registerActions (actions) {
     for (const key in actions) {
       this.game.registerAction(key, actions[key])
     }
   }
 
-  registerKeyboards(actions) {
+  registerKeyboards (actions) {
     for (const key in actions) {
       this.game.registerKeyboard(key, actions[key])
     }

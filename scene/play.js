@@ -6,13 +6,13 @@ import { Laser, Bolt } from '../element/bolts.js'
 import Ship from '../element/ship.js'
 import { EnemyBig, EnemySmall } from '../element/enemies.js'
 import Explosion from '../element/explosion.js'
+import { type } from '../utils.js'
 
 const log = console.log.bind(console)
-import { type } from '../utils.js'
 const random = (max, min) => Math.floor(Math.random() * (max - min + 1)) + min
 
 export default class Play extends Scene {
-  constructor(game) {
+  constructor (game) {
     super(game)
     // game meta
     this.score = 0
@@ -21,7 +21,7 @@ export default class Play extends Scene {
     // init element
     this.ship = new Ship({
       x: 100,
-      y: 100,
+      y: 100
     })
     this._elements = []
     this._removedElementIndexes = []
@@ -32,7 +32,7 @@ export default class Play extends Scene {
       a: () => this.ship.moveLeft(),
       d: () => this.ship.moveRight(),
       w: () => this.ship.moveTop(),
-      s: () => this.ship.moveBottom(),
+      s: () => this.ship.moveBottom()
     })
     // debug
     this._debug()
@@ -43,9 +43,53 @@ export default class Play extends Scene {
     this._CDTime = 15
     this._fireBreak = 0
     this._genBreak = 0
+    this.elementActions = {
+      Laser (e, scene) {
+        // 检测碰撞..
+        scene.enemies.forEach(ene => {
+          if (e.collide(ene)) {
+            log('I am the Laser!')
+            // scene.removeElement(ene)
+            scene.damageEnemy(ene)
+          }
+        })
+        // go beyond the boundary
+        if (e.y < 0) {
+          scene.removeElement(e)
+        }
+      },
+      Bolt (e, scene) {
+        // 检测碰撞..
+        scene.enemies.forEach(ene => {
+          if (e.collide(ene)) {
+            log('I am a bolt!')
+            scene.removeElement(e)
+            scene.damageEnemy(ene)
+          }
+        })
+        // go beyond the boundary
+        if (e.y < 0) {
+          scene.removeElement(e)
+        }
+      },
+      Ship (e, scene) {},
+      EnemyBig (e, scene) {
+        if (e.y > 342) {
+          scene.gameOver()
+          // scene.removeElement(e)
+        }
+      },
+      EnemySmall (e, scene) {
+        if (e.y > 342) {
+          scene.gameOver()
+          // scene.removeElement(e)
+        }
+      },
+      Explosion (e, scene) {}
+    }
   }
 
-  refreshBoltCD() {
+  refreshBoltCD () {
     if (!this.fireCD) {
       // 没有在 CD 就不刷新
       return
@@ -57,19 +101,19 @@ export default class Play extends Scene {
     }
   }
 
-  genEnemy() {
+  genEnemy () {
     // random enemy
     const x = random(20, 230)
     const Enemy = x % 2 === 0 ? EnemySmall : EnemyBig
     this.addElement(
       new Enemy({
         x,
-        y: -30,
-      }),
+        y: -30
+      })
     )
   }
 
-  genEnemies() {
+  genEnemies () {
     if (this._genBreak === this._CDTime * 6) {
       this.genEnemy()
       this._genBreak = 0
@@ -78,7 +122,7 @@ export default class Play extends Scene {
     }
   }
 
-  damageEnemy(ene) {
+  damageEnemy (ene) {
     ene.hp -= 1
     if (ene.hp === 0) {
       this.removeElement(ene)
@@ -86,21 +130,20 @@ export default class Play extends Scene {
     }
   }
 
-  get enemies() {
+  get enemies () {
     return this.elements.filter(e => {
       return type(e) === 'EnemyBig' || type(e) === 'EnemySmall'
     })
   }
 
-  get elements() {
+  get elements () {
     const r = this._elements.filter(e => e !== null)
     r.push(this.ship)
     return r
   }
 
-  fireBolt(type) {
+  fireBolt (type) {
     if (this.fireCD) {
-      return
     } else {
       this.fireCD = true
       // fire a bolt near the ship
@@ -108,13 +151,13 @@ export default class Play extends Scene {
       this.addElement(
         new B({
           x: this.ship.x,
-          y: this.ship.y,
-        }),
+          y: this.ship.y
+        })
       )
     }
   }
 
-  explode(element) {
+  explode (element) {
     let x = element.x
     let y = element.y
     if (type(element) === 'EnemyBig') {
@@ -123,7 +166,7 @@ export default class Play extends Scene {
     }
     const e = new Explosion({
       x,
-      y,
+      y
     })
     e.animateCallback = () => {
       log('消失')
@@ -132,7 +175,7 @@ export default class Play extends Scene {
     this.addElement(e)
   }
 
-  addElement(element) {
+  addElement (element) {
     let i = this._removedElementIndexes.shift()
     if (!i) {
       i = this._elements.length
@@ -141,7 +184,7 @@ export default class Play extends Scene {
     this._elements[i] = element
   }
 
-  removeElement(e) {
+  removeElement (e) {
     const i = e.index
     this._elements[i] = null
     this._removedElementIndexes.push(i)
@@ -150,56 +193,11 @@ export default class Play extends Scene {
     this.score += 1
   }
 
-  elementActions = {
-    Laser(e, scene) {
-      // 检测碰撞..
-      scene.enemies.forEach(ene => {
-        if (e.collide(ene)) {
-          log('I am the Laser!')
-          // scene.removeElement(ene)
-          scene.damageEnemy(ene)
-        }
-      })
-      // go beyond the boundary
-      if (e.y < 0) {
-        scene.removeElement(e)
-      }
-    },
-    Bolt(e, scene) {
-      // 检测碰撞..
-      scene.enemies.forEach(ene => {
-        if (e.collide(ene)) {
-          log('I am a bolt!')
-          scene.removeElement(e)
-          scene.damageEnemy(ene)
-        }
-      })
-      // go beyond the boundary
-      if (e.y < 0) {
-        scene.removeElement(e)
-      }
-    },
-    Ship(e, scene) {},
-    EnemyBig(e, scene) {
-      if (e.y > 342) {
-        scene.gameOver()
-        // scene.removeElement(e)
-      }
-    },
-    EnemySmall(e, scene) {
-      if (e.y > 342) {
-        scene.gameOver()
-        // scene.removeElement(e)
-      }
-    },
-    Explosion(e, scene) {},
-  }
-
-  gameOver() {
+  gameOver () {
     this.game.renderScene('Home', this.score)
   }
 
-  update() {
+  update () {
     // super.update()
     if (this.pause) {
       return
@@ -216,7 +214,7 @@ export default class Play extends Scene {
     })
   }
 
-  draw() {
+  draw () {
     // super.draw()
     const g = this.game
     // draw
@@ -224,7 +222,7 @@ export default class Play extends Scene {
     g.renderText('score', `得分 ${this.score}`)
   }
 
-  _debug() {
+  _debug () {
     const s = this
     const g = s.game
 
@@ -253,7 +251,7 @@ export default class Play extends Scene {
       mouseup: (x, y) => {
         selected = null
         console.log(`鼠标释放点 x: ${x}, y:${y}`)
-      },
+      }
     }
     g.recordMouse(mouseActions)
   }

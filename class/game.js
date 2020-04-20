@@ -6,22 +6,23 @@ import { log, clearObj } from '../utils.js'
 
 const scenes = {
   Home,
-  Play,
+  Play
 }
 
 let firstInit = true
 
 export default class Game {
-  static new() {
+  static new () {
     if (firstInit) {
       firstInit = false
       const game = new Game('Home')
+      log(game)
     } else {
       throw Error("Game can't be instanced twice")
     }
   }
 
-  constructor(initScene) {
+  constructor (initScene) {
     //
     this.canvas = document.querySelector('#id-canvas')
     this.context = this.canvas.getContext('2d')
@@ -35,7 +36,7 @@ export default class Game {
     this._runTheGame()
   }
 
-  _listenKeyBoard() {
+  _listenKeyBoard () {
     // events
     const g = this
     window.addEventListener('keydown', event => {
@@ -47,13 +48,13 @@ export default class Game {
     })
   }
 
-  _initGame(initScene) {
+  _initGame (initScene) {
     // init BackGround
     this._background = new BackGround(this)
     this.renderScene(initScene)
   }
 
-  _runTheGame() {
+  _runTheGame () {
     const g = this
     // keyborad events
     for (const key in g.actions) {
@@ -71,8 +72,9 @@ export default class Game {
     }, 1000 / (window.fps || 30))
   }
 
-  renderElement(ele) {
+  renderElement (ele) {
     const i = ele.img
+    // api refer: `void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);`
     this.context.drawImage(
       i._img,
       i._sx,
@@ -82,11 +84,11 @@ export default class Game {
       ele.x,
       ele.y,
       ele.width,
-      ele.height,
+      ele.height
     )
   }
 
-  renderText(type, text, line = 1) {
+  renderText (type, text, line = 1) {
     // read conf
     const s = textConfig[type]
 
@@ -97,7 +99,7 @@ export default class Game {
     ctx.fillText(text, s.position[0], s.position[1] * line)
   }
 
-  renderScene(sceneName, ...args) {
+  renderScene (sceneName, ...args) {
     // 清除之前场景绑定的键位, 鼠标事件
     this.clearKeyboard()
     this.clearMouse()
@@ -107,29 +109,29 @@ export default class Game {
     this.scene = s
   }
 
-  registerAction(key, callback) {
+  registerAction (key, callback) {
     // 控制游戏元素的键, 比如 f 开火, ad 移动 paddle
     this.actions[key] = callback
   }
 
-  registerKeyboard(key, callback) {
+  registerKeyboard (key, callback) {
     // 和游戏元素无关的键, 比如 P 暂停游戏..
     this.keyRecord[key] = callback
   }
 
-  clearKeyboard() {
+  clearKeyboard () {
     clearObj(this.actions)
     clearObj(this.keyRecord)
   }
 
-  recordMouse(mouseActions) {
+  recordMouse (mouseActions) {
     for (const [type, callback] of Object.entries(mouseActions)) {
       this.mouseRecord[type] = e => callback(e.offsetX, e.y, e)
       this.canvas.addEventListener(type, this.mouseRecord[type])
     }
   }
 
-  clearMouse() {
+  clearMouse () {
     const r = this.mouseRecord
     for (const k in r) {
       this.canvas.removeEventListener(k, r[k])
@@ -137,12 +139,12 @@ export default class Game {
     clearObj(r)
   }
 
-  update() {
+  update () {
     this._background.update()
     this.scene.update()
   }
 
-  draw() {
+  draw () {
     this._background.draw()
     this.scene.draw()
   }

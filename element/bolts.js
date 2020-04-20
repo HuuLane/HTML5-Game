@@ -1,7 +1,7 @@
 import { Rectangle } from '../class/element.js'
 
 class Bolts extends Rectangle {
-  constructor(config) {
+  constructor (config) {
     config.img = window.imgs.bolts
     config.height = 16
     config.width = 16
@@ -15,7 +15,7 @@ class Bolts extends Rectangle {
     // play scene meta
   }
 
-  collide(o) {
+  collide (o) {
     const b = this
     if (
       b.left > o.right ||
@@ -29,21 +29,21 @@ class Bolts extends Rectangle {
     }
   }
 
-  move() {
+  move () {
     const o = this
     o.y -= o.speedY
   }
 }
 
 class Laser extends Bolts {
-  constructor(config) {
+  constructor (config) {
     super(config)
     this.imgs.splice(0, 2)
   }
 }
 
 class Bolt extends Bolts {
-  constructor(config) {
+  constructor (config) {
     super(config)
     this.imgs.splice(2, 4)
   }

@@ -1,7 +1,7 @@
 import { Rectangle } from '../class/element.js'
 
 export default class Ship extends Rectangle {
-  constructor(config) {
+  constructor (config) {
     // special for ship
     config.img = window.imgs.ship
     config.height = 24
@@ -12,35 +12,36 @@ export default class Ship extends Rectangle {
     // this.animateSpeed = 3
     this.autoDownSpeed = 1.2
   }
-  moveTop() {
+
+  moveTop () {
     const o = this
-    // 碰壁
     if (o.y > 0) {
       o.y -= o.speedY
     }
   }
-  moveBottom() {
+
+  moveBottom () {
     const o = this
-    // 碰壁
     if (o.y + o.height < 342) {
       o.y += o.speedY
     }
   }
-  moveLeft() {
+
+  moveLeft () {
     const o = this
-    // 碰壁
     if (o.x > 0) {
       o.x -= o.speedX
     }
   }
-  moveRight() {
+
+  moveRight () {
     const o = this
-    // 碰壁
     if (o.x + o.width < 256) {
       o.x += o.speedX
     }
   }
-  move() {
+
+  move () {
     if (this.y + this.height < 342) {
       this.y += this.autoDownSpeed
     }

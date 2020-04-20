@@ -10,10 +10,10 @@ const zip = function * (a, b) {
 
 const imgFromPath = path => {
   // To transform a path into Promise
-  const img = new Image()
+  const img = new window.Image()
   img.src = path
-  return new Promise(res => {
-    img.onload = () => res(img)
+  return new Promise(resolve => {
+    img.onload = () => resolve(img)
   })
 }
 
