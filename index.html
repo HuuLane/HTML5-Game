@@ -4,18 +4,49 @@
     <meta charset="utf-8" />
     <title>STG</title>
     <style>
-      canvas {
-        border: 1px black solid;
+      kbd {
+        background-color: #eee;
+        border-radius: 3px;
+        border: 1px solid #b4b4b4;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
+          0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
+        color: #333;
+        display: inline-block;
+        font-size: 0.85em;
+        font-weight: 700;
+        line-height: 1;
+        padding: 2px 4px;
+        white-space: nowrap;
       }
     </style>
   </head>
 
   <body>
     <canvas id="id-canvas" width="256" height="342"></canvas>
-
+    <div>
+      <ul>
+        <li><kbd>R</kbd> start</li>
+        <li><kbd>P</kbd> pause</li>
+        <li>
+          <kbd>W</kbd>
+          <kbd>S</kbd>
+          <kbd>A</kbd>
+          <kbd>D</kbd>
+          move
+        </li>
+        <li><kbd>K</kbd> Fire bullets</li>
+        <li><kbd>L</kbd> Fire laser bullets</li>
+        <li>
+          <b
+            >Hold down <kbd>Mouse🖰 </kbd> + <kbd>Left</kbd> to drag whatever you
+            want !
+          </b>
+        </li>
+      </ul>
+    </div>
     <div class="debug-board">
       <input type="range" id="id-input" value="30" />
-      <span id="id-span-fps">30</span>
+      fps: <span id="id-span-fps">30</span>
       <script>
         const q = s => document.querySelector(s)
         const bar = q('#id-input')
