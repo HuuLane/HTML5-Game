@@ -17,7 +17,7 @@ class Img {
   }
 
   _parseSourceImg (img, spritesWidth, spritesHeight) {
-    // divede the spritesheet
+    // cut the spritesheet
     const w = spritesWidth
     const h = spritesHeight
 
@@ -47,7 +47,7 @@ class Element extends Img {
 
   animate () {
     if (this._imgIndex === this.imgs.length) {
-      // 一轮动画播放完毕
+      // One round of animation finished
       this._imgIndex = 0
       this.animateCallback()
     }

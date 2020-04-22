@@ -45,7 +45,6 @@ export default class Play extends Scene {
     this._genBreak = 0
     this.elementActions = {
       Laser (e, scene) {
-        // 检测碰撞..
         scene.enemies.forEach(ene => {
           if (e.collide(ene)) {
             log('I am the Laser!')
@@ -59,7 +58,6 @@ export default class Play extends Scene {
         }
       },
       Bolt (e, scene) {
-        // 检测碰撞..
         scene.enemies.forEach(ene => {
           if (e.collide(ene)) {
             log('I am a bolt!')
@@ -91,7 +89,6 @@ export default class Play extends Scene {
 
   refreshBoltCD () {
     if (!this.fireCD) {
-      // 没有在 CD 就不刷新
       return
     }
     this._fireBreak += 1
@@ -160,6 +157,7 @@ export default class Play extends Scene {
   explode (element) {
     let x = element.x
     let y = element.y
+    // patch: EnemyBig's picture has some Size problem
     if (type(element) === 'EnemyBig') {
       x += element.width / 3
       y += element.height / 3
@@ -169,7 +167,6 @@ export default class Play extends Scene {
       y
     })
     e.animateCallback = () => {
-      log('消失')
       this.removeElement(e)
     }
     this.addElement(e)
@@ -188,7 +185,7 @@ export default class Play extends Scene {
     const i = e.index
     this._elements[i] = null
     this._removedElementIndexes.push(i)
-    log('', this._elements)
+    log('Current exists:', this._elements)
     //
     this.score += 1
   }
@@ -219,23 +216,23 @@ export default class Play extends Scene {
     const g = this.game
     // draw
     this.elements.forEach(e => g.renderElement(e))
-    g.renderText('score', `得分 ${this.score}`)
+    g.renderText('score', `Score: ${this.score}`)
   }
 
   _debug () {
     const s = this
     const g = s.game
 
-    // 按 p 暂停
+    // Press p to pause
     g.registerKeyboard('p', () => (s.pause = !s.pause))
 
-    // 拖拽
+    // Drag
     let selected = null
     const mouseActions = {
       mousedown: (x, y) => {
-        // 检查是否点中了 element
+        // Check if a element hited
         for (const e of this.elements) {
-          // 设置拖拽状态
+          // Set drag status
           if (e.hasPoint(x, y)) {
             selected = e
             return
@@ -250,7 +247,7 @@ export default class Play extends Scene {
       },
       mouseup: (x, y) => {
         selected = null
-        console.log(`鼠标释放点 x: ${x}, y:${y}`)
+        console.log(`Mouse release point (x: ${x}, y: ${y})`)
       }
     }
     g.recordMouse(mouseActions)

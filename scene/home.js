@@ -17,10 +17,8 @@ export default class Play extends Scene {
 
   draw () {
     // super.draw()
-    this.game.renderText('score', '按 r 开始游戏')
-    this.game.renderText('score', '按 K 发射子弹, L 发射镭射电波', 2)
     if (this.score) {
-      this.game.renderText('score', `上把得分${this.score}`, 3)
+      this.game.renderText('score', `Score: ${this.score}`, 3)
       this.game.renderText('title', 'GAME OVER')
     } else {
       this.game.renderText('title', 'STG')

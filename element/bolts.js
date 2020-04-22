@@ -6,9 +6,10 @@ class Bolts extends Rectangle {
     config.height = 16
     config.width = 16
     super(config)
-    // 这组图片有点特殊, 像素划分不规则, 只能硬编码了..
+    // patch: This group of pictures is special with irregular pixel division, so I need to hardcoded..
     this.imgs[0]._sx += 2
     this.imgs[2]._sx += 2
+    //
     this.speedX = 0
     this.speedY = 2
     this.animateSpeed = 10

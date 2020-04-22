@@ -25,12 +25,6 @@ export default class BackGround extends Scene {
     this.init()
   }
 
-  // registerActions(actions) {
-  //   super.registerActions(actions)
-  // }
-  // registerKeyboards(actions) {
-  //   super.registerKeyboards(actions)
-  // }
   init () {
     // canvas height
     const height = 342
@@ -48,7 +42,6 @@ export default class BackGround extends Scene {
     // log('main.y', main.y)
     if (main.y === 0) {
       // init minor
-      log('等于 0 啦')
       minor.y = -608
     } else if (main.y > 0) {
       // log('min', main.y)
