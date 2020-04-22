@@ -21,7 +21,7 @@ export default class Play extends Scene {
       this.game.renderText('score', `Score: ${this.score}`, 3)
       this.game.renderText('title', 'GAME OVER')
     } else {
-      this.game.renderText('title', 'STG')
+      this.game.renderText('title', '绝命荒谷')
     }
   }
 }
