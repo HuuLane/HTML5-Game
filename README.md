@@ -2,11 +2,11 @@
 
 [![JavaScript Style Guide](https://cdn.rawgit.com/standard/standard/master/badge.svg)](https://github.com/standard/standard)
 
-<p align="center">
+
     <a href="https://huulane.github.io/HTML5-Game/">
         <img src="./Screenshot_20200422_222101.png">
     </a>
-</p>
+
 
 ## features:
 
