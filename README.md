@@ -2,7 +2,11 @@
 
 [![JavaScript Style Guide](https://cdn.rawgit.com/standard/standard/master/badge.svg)](https://github.com/standard/standard)
 
+- STG (Deployed on Github pages)
+
 [![screenshot](./Screenshot_20200422_222101.png)](https://huulane.github.io/HTML5-Game/)
+
+- Breakout Clone(on brick branch)
 
 ## features:
 
